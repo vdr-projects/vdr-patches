@@ -30,6 +30,7 @@
 #include "timers.h"
 #include "transfer.h"
 #include "videodir.h"
+#include "vdrttxtsubshooks.h"
 
 #define MAXWAIT4EPGINFO   3 // seconds
 #define MODETIMEOUT       3 // seconds
@@ -3755,8 +3756,10 @@ cRecordControl::cRecordControl(cDevice *Device, cTimer *Timer, bool Pause)
   isyslog("record %s", fileName);
   if (MakeDirs(fileName, true)) {
      const cChannel *ch = timer->Channel();
-     recorder = new cRecorder(fileName, ch->GetChannelID(), timer->Priority(), ch->Vpid(), ch->Apids(), ch->Dpids(), ch->Spids());
+     cTtxtSubsRecorderBase *subsRecorder = cVDRTtxtsubsHookListener::Hook()->NewTtxtSubsRecorder(device, ch);
+     recorder = new cRecorder(fileName, ch->GetChannelID(), timer->Priority(), ch->Vpid(), ch->Apids(), ch->Dpids(), ch->Spids(), subsRecorder);
      if (device->AttachReceiver(recorder)) {
+        if (subsRecorder) subsRecorder->DeviceAttach();
         Recording.WriteInfo();
         cStatus::MsgRecording(device, Recording.Name(), Recording.FileName(), true);
         if (!Timer && !cReplayControl::LastReplayed()) // an instant recording, maybe from cRecordControls::PauseLiveVideo()

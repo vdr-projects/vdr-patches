@@ -15,6 +15,33 @@
 #include "ringbuffer.h"
 #include "thread.h"
 #include "tools.h"
+#include "vdrttxtsubshooks.h"
+
+static void StripExtendedPackets(uchar *b, int Length)
+{
+  for (int i = 0; i < Length - 6; i++) {
+      if (b[i] == 0x00 && b[i + 1] == 0x00 && b[i + 2] == 0x01) {
+         uchar c = b[i + 3];
+         int l = b[i + 4] * 256 + b[i + 5] + 6;
+         switch (c) {
+           case 0xBD: // dolby
+                // EBU Teletext data, ETSI EN 300 472
+                if (b[i + 8] == 0x24 && b[i + 45] >= 0x10 && b[i + 45] < 0x20) {
+                   cVDRTtxtsubsHookListener::Hook()->PlayerTeletextData(&b[i], l);
+                   // continue with deleting the data - otherwise it disturbs DVB replay
+                   int n = l;
+                   for (int j = i; j < Length && n--; j++)
+                       b[j] = 0x00;
+                   }
+                break;
+           default:
+                break;
+           }
+         if (l)
+            i += l - 1; // the loop increments, too!
+         }
+      }
+}
 
 // --- cPtsIndex -------------------------------------------------------------
 
@@ -530,8 +557,10 @@ void cDvbPlayer::Action(void)
                 }
              if (p) {
                 int w;
-                if (isPesRecording)
+                if (isPesRecording) {
+                   StripExtendedPackets(p, pc);
                    w = PlayPes(p, pc, playMode != pmPlay && !(playMode == pmSlow && playDir == pdForward) && DeviceIsPlayingVideo());
+                   }
                 else
                    w = PlayTs(p, pc, playMode != pmPlay && !(playMode == pmSlow && playDir == pdForward) && DeviceIsPlayingVideo());
                 if (w > 0) {
