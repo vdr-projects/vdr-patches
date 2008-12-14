@@ -43,6 +43,8 @@ OBJS = audio.o channels.o ci.o config.o cutter.o device.o diseqc.o dvbdevice.o d
        skinclassic.o skins.o skinsttng.o sources.o spu.o status.o svdrp.o themes.o thread.o\
        timers.o tools.o transfer.o vdr.o videodir.o
 
+OBJS += vdrttxtsubshooks.o
+
 ifndef NO_KBD
 DEFINES += -DREMOTE_KBD
 endif

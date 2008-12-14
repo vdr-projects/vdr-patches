@@ -15,6 +15,7 @@
 #include <sys/stat.h>
 #include <sys/unistd.h>
 #include "tools.h"
+#include "vdrttxtsubshooks.h"
 
 // --- cPalette --------------------------------------------------------------
 

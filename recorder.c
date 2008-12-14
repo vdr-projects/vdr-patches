@@ -11,6 +11,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <stdint.h>
 #include "shutdown.h"
 
 #define RECORDERBUFSIZE  MEGABYTE(5)
@@ -26,6 +27,7 @@
 
 class cFileWriter : public cThread {
 private:
+  cTtxtSubsRecorderBase *ttxtSubsRecorder;
   cRemux *remux;
   cFileName *fileName;
   cIndexFile *index;
@@ -38,13 +40,14 @@ private:
 protected:
   virtual void Action(void);
 public:
-  cFileWriter(const char *FileName, cRemux *Remux);
+  cFileWriter(const char *FileName, cRemux *Remux, cTtxtSubsRecorderBase *tsr);
   virtual ~cFileWriter();
   };
 
-cFileWriter::cFileWriter(const char *FileName, cRemux *Remux)
+cFileWriter::cFileWriter(const char *FileName, cRemux *Remux, cTtxtSubsRecorderBase *tsr)
 :cThread("file writer")
 {
+  ttxtSubsRecorder = tsr;
   fileName = NULL;
   remux = Remux;
   index = NULL;
@@ -67,6 +70,8 @@ cFileWriter::~cFileWriter()
   Cancel(3);
   delete index;
   delete fileName;
+  if (ttxtSubsRecorder)
+     delete ttxtSubsRecorder;
 }
 
 bool cFileWriter::RunningLowOnDiskSpace(void)
@@ -111,6 +116,16 @@ void cFileWriter::Action(void)
                  }
               fileSize += Count;
               remux->Del(Count);
+              // not sure if the pictureType test is needed, but it seems we can get
+              // incomplete pes packets from remux if we are not getting pictures?
+              if (ttxtSubsRecorder && pictureType != NO_PICTURE) {
+                 uint8_t *subsp;
+                 size_t len;
+                 if (ttxtSubsRecorder->GetPacket(&subsp, &len)) {
+                    recordFile->Write(subsp, len);
+                    fileSize += len;
+                    }
+                 }
               }
            else
               break;
@@ -126,7 +141,7 @@ void cFileWriter::Action(void)
 
 // --- cRecorder -------------------------------------------------------------
 
-cRecorder::cRecorder(const char *FileName, tChannelID ChannelID, int Priority, int VPid, const int *APids, const int *DPids, const int *SPids)
+cRecorder::cRecorder(const char *FileName, tChannelID ChannelID, int Priority, int VPid, const int *APids, const int *DPids, const int *SPids, cTtxtSubsRecorderBase *tsr)
 :cReceiver(ChannelID, Priority, VPid, APids, Setup.UseDolbyDigital ? DPids : NULL, SPids)
 ,cThread("recording")
 {
@@ -137,7 +152,7 @@ cRecorder::cRecorder(const char *FileName, tChannelID ChannelID, int Priority, i
   ringBuffer = new cRingBufferLinear(RECORDERBUFSIZE, TS_SIZE * 2, true, "Recorder");
   ringBuffer->SetTimeouts(0, 100);
   remux = new cRemux(VPid, APids, Setup.UseDolbyDigital ? DPids : NULL, SPids, true);
-  writer = new cFileWriter(FileName, remux);
+  writer = new cFileWriter(FileName, remux, tsr);
 }
 
 cRecorder::~cRecorder()
