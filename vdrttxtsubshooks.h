@@ -44,7 +44,7 @@ class cVDRTtxtsubsHookListener {
   
   virtual void HideOSD(void) {};
   virtual void ShowOSD(void) {};
-  virtual void PlayerTeletextData(uint8_t *p, int length) {};
+  virtual void PlayerTeletextData(uint8_t *p, int length, bool IsPesRecording = true) {};
   virtual cTtxtSubsRecorderBase *NewTtxtSubsRecorder(cDevice *dev, const cChannel *ch)
     { return NULL; };
 

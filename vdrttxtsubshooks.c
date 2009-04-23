@@ -34,8 +34,8 @@ class cVDRTtxtsubsHookProxy : public cVDRTtxtsubsHookListener
  public:
   virtual void HideOSD(void) { if(gListener) gListener->HideOSD(); };
   virtual void ShowOSD(void) { if(gListener) gListener->ShowOSD(); };
-  virtual void PlayerTeletextData(uint8_t *p, int length)
-    { if(gListener) gListener->PlayerTeletextData(p, length); };
+  virtual void PlayerTeletextData(uint8_t *p, int length, bool IsPesRecording)
+    { if(gListener) gListener->PlayerTeletextData(p, length, IsPesRecording); };
   virtual cTtxtSubsRecorderBase *NewTtxtSubsRecorder(cDevice *dev, const cChannel *ch)
     { if(gListener) return gListener->NewTtxtSubsRecorder(dev, ch); else return NULL; };
 };

@@ -1390,7 +1390,7 @@ int cDevice::PlayTs(const uchar *Data, int Length, bool VideoOnly)
                        tsToPesTeletext.PutTs(Data, Length);
                        if (const uchar *p = tsToPesTeletext.GetPes(l)) {
                           if ((l > 45) && (p[0] == 0x00) && (p[1] == 0x00) && (p[2] == 0x01) && (p[3] == 0xbd) && (p[8] == 0x24) && (p[45] >= 0x10) && (p[45] < 0x20))
-                             cVDRTtxtsubsHookListener::Hook()->PlayerTeletextData((uchar *)p, l);
+                             cVDRTtxtsubsHookListener::Hook()->PlayerTeletextData((uchar *)p, l, false);
                           tsToPesTeletext.Reset();
                           }
                        }
