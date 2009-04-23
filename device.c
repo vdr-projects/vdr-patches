@@ -18,6 +18,7 @@
 #include "receiver.h"
 #include "status.h"
 #include "transfer.h"
+#include "vdrttxtsubshooks.h"
 
 // --- cLiveSubtitle ---------------------------------------------------------
 
@@ -1337,6 +1338,7 @@ int cDevice::PlayTs(const uchar *Data, int Length, bool VideoOnly)
      tsToPesVideo.Reset();
      tsToPesAudio.Reset();
      tsToPesSubtitle.Reset();
+     tsToPesTeletext.Reset();
      }
   else if (Length < TS_SIZE) {
      esyslog("ERROR: skipped %d bytes of TS fragment", Length);
@@ -1381,6 +1383,17 @@ int cDevice::PlayTs(const uchar *Data, int Length, bool VideoOnly)
                  else if (Pid == availableTracks[currentSubtitleTrack].id) {
                     if (!VideoOnly || HasIBPTrickSpeed())
                        PlayTsSubtitle(Data, TS_SIZE);
+                    }
+                 else if (Pid == patPmtParser.Tpid()) {
+                    if (!VideoOnly || HasIBPTrickSpeed()) {
+                       int l;
+                       tsToPesTeletext.PutTs(Data, Length);
+                       if (const uchar *p = tsToPesTeletext.GetPes(l)) {
+                          if ((l > 45) && (p[0] == 0x00) && (p[1] == 0x00) && (p[2] == 0x01) && (p[3] == 0xbd) && (p[8] == 0x24) && (p[45] >= 0x10) && (p[45] < 0x20))
+                             cVDRTtxtsubsHookListener::Hook()->PlayerTeletextData((uchar *)p, l);
+                          tsToPesTeletext.Reset();
+                          }
+                       }
                     }
                  }
               }
