@@ -533,6 +533,15 @@ void cChannel::SetPids(int Vpid, int Ppid, int Vtype, int *Apids, char ALangs[][
      }
 }
 
+void cChannel::SetTPidData(char TLangs[][MAXLANGCODE2], int TPages[])
+{
+  for (int i = 0; i < MAXTPAGES; i++) {
+      tpages[i] = TPages[i];
+      strn0cpy(tlangs[i], TLangs[i], MAXLANGCODE2);
+      }
+  tpages[MAXTPAGES] = 0;
+}
+
 void cChannel::SetCaIds(const int *CaIds)
 {
   if (caids[0] && caids[0] <= CA_USER_MAX)

@@ -35,6 +35,7 @@
 #define MAXDPIDS 16 // dolby (AC3 + DTS)
 #define MAXSPIDS 32 // subtitles
 #define MAXCAIDS  8 // conditional access
+#define MAXTPAGES 8 // teletext pages
 
 #define MAXLANGCODE1 4 // a 3 letter language code, zero terminated
 #define MAXLANGCODE2 8 // up to two 3 letter language codes, separated by '+' and zero terminated
@@ -130,6 +131,8 @@ private:
   int spids[MAXSPIDS + 1]; // list is zero-terminated
   char slangs[MAXSPIDS][MAXLANGCODE2];
   int tpid;
+  char tlangs[MAXTPAGES][MAXLANGCODE2];
+  int tpages[MAXTPAGES + 1]; // list is zero-terminated
   int caids[MAXCAIDS + 1]; // list is zero-terminated
   int nid;
   int tid;
@@ -186,6 +189,8 @@ public:
   const char *Dlang(int i) const { return (0 <= i && i < MAXDPIDS) ? dlangs[i] : ""; }
   const char *Slang(int i) const { return (0 <= i && i < MAXSPIDS) ? slangs[i] : ""; }
   int Tpid(void) const { return tpid; }
+  const char *Tlang(int i) const { return (0 <= i && i < MAXTPAGES) ? tlangs[i] : ""; }
+  const int TPages(int i) const { return (0 <= i && i < MAXTPAGES) ? tpages[i] : 0; }
   const int *Caids(void) const { return caids; }
   int Ca(int Index = 0) const { return Index < MAXCAIDS ? caids[Index] : 0; }
   int Nid(void) const { return nid; }
@@ -222,6 +227,7 @@ public:
   void SetName(const char *Name, const char *ShortName, const char *Provider);
   void SetPortalName(const char *PortalName);
   void SetPids(int Vpid, int Ppid, int Vtype, int *Apids, char ALangs[][MAXLANGCODE2], int *Dpids, char DLangs[][MAXLANGCODE2], int *Spids, char SLangs[][MAXLANGCODE2], int Tpid);
+  void SetTPidData(char TLangs[][MAXLANGCODE2], int TPages[]);
   void SetCaIds(const int *CaIds); // list must be zero-terminated
   void SetCaDescriptors(int Level);
   void SetLinkChannels(cLinkChannels *LinkChannels);
