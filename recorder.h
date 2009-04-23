@@ -15,7 +15,6 @@
 #include "remux.h"
 #include "ringbuffer.h"
 #include "thread.h"
-#include "vdrttxtsubshooks.h"
 
 class cRecorder : public cReceiver, cThread {
 private:
@@ -35,7 +34,7 @@ protected:
   virtual void Receive(uchar *Data, int Length);
   virtual void Action(void);
 public:
-  cRecorder(const char *FileName, tChannelID ChannelID, int Priority, int VPid, const int *APids, const int *DPids, const int *SPids, cTtxtSubsRecorderBase *tsr);
+  cRecorder(const char *FileName, tChannelID ChannelID, int Priority, int VPid, const int *APids, const int *DPids, const int *SPids, const int *EPids = NULL);
                // Creates a new recorder for the channel with the given ChannelID and
                // the given Priority that will record the given PIDs into the file FileName.
   virtual ~cRecorder();
