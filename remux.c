@@ -215,6 +215,30 @@ int cPatPmtGenerator::MakeSubtitlingDescriptor(uchar *Target, const char *Langua
   return i;
 }
 
+int cPatPmtGenerator::MakeTeletextDescriptor(uchar *Target, cChannel *Channel)
+{
+  int i = 0, j = 0;
+  Target[i++] = SI::TeletextDescriptorTag;
+  int l = i;
+  Target[i++] = 0x00; // length
+  for (int n = 0; Channel->TPages(n); n++) {
+      const char *Language = Channel->Tlang(n);
+      int Pages = Channel->TPages(n);
+      Target[i++] = *Language++;
+      Target[i++] = *Language++;
+      Target[i++] = *Language++;
+      Target[i++] = ((Pages >> 13) & 0xf8) | ((Pages >> 8) & 0x7); // teletext type & magazine number
+      Target[i++] = Pages & 0xff; // teletext page number
+      j++;
+      }
+  if (j > 0) {
+     Target[l] = j * 5; // update length
+     IncEsInfoLength(i);
+     return i;
+     }
+  return 0;
+}
+
 int cPatPmtGenerator::MakeLanguageDescriptor(uchar *Target, const char *Language)
 {
   int i = 0;
@@ -295,6 +319,7 @@ void cPatPmtGenerator::GeneratePmt(cChannel *Channel)
   numPmtPackets = 0;
   if (Channel) {
      int Vpid = Channel->Vpid();
+     int Tpid = Channel->Tpid();
      uchar *p = buf;
      int i = 0;
      p[i++] = 0x02; // table id
@@ -329,6 +354,10 @@ void cPatPmtGenerator::GeneratePmt(cChannel *Channel)
          i += MakeStream(buf + i, 0x06, Channel->Spid(n));
          i += MakeSubtitlingDescriptor(buf + i, Channel->Slang(n));
          }
+     if (Tpid) {
+        i += MakeStream(buf + i, 0x06, Tpid);
+        i += MakeTeletextDescriptor(buf + i, Channel);
+        }
 
      int sl = i - SectionLength - 2 + 4; // -2 = SectionLength storage, +4 = length of CRC
      buf[SectionLength] |= (sl >> 8) & 0x0F;
@@ -401,6 +430,7 @@ void cPatPmtParser::Reset(void)
   patVersion = pmtVersion = -1;
   pmtPid = -1;
   vpid = vtype = 0;
+  tpid = 0;
 }
 
 void cPatPmtParser::ParsePat(const uchar *Data, int Length)
@@ -485,6 +515,7 @@ void cPatPmtParser::ParsePmt(const uchar *Data, int Length)
      int NumDpids = 0;
      int NumSpids = 0;
      vpid = vtype = 0;
+     tpid = 0;
      SI::PMT::Stream stream;
      for (SI::Loop::Iterator it; Pmt.streamLoop.getNext(stream, it); ) {
          dbgpatpmt("     stream type = %02X, pid = %d", stream.getStreamType(), stream.getPid());
@@ -564,6 +595,10 @@ void cPatPmtParser::ParsePmt(const uchar *Data, int Length)
                                        cDevice::PrimaryDevice()->SetAvailableTrack(ttSubtitle, NumSpids, stream.getPid(), SLangs);
                                     NumSpids++;
                                     }
+                                 break;
+                            case SI::TeletextDescriptorTag:
+                                 dbgpatpmt(" teletext");
+                                 tpid = stream.getPid();
                                  break;
                             case SI::ISO639LanguageDescriptorTag: {
                                  SI::ISO639LanguageDescriptor *ld = (SI::ISO639LanguageDescriptor *)d;

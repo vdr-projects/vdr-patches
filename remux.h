@@ -169,6 +169,7 @@ protected:
   int MakeStream(uchar *Target, uchar Type, int Pid);
   int MakeAC3Descriptor(uchar *Target);
   int MakeSubtitlingDescriptor(uchar *Target, const char *Language);
+  int MakeTeletextDescriptor(uchar *Target, cChannel *Channel);
   int MakeLanguageDescriptor(uchar *Target, const char *Language);
   int MakeCRC(uchar *Target, const uchar *Data, int Length);
   void GeneratePmtPid(cChannel *Channel);
@@ -214,6 +215,7 @@ private:
   int vpid;
   int vtype;
   bool updatePrimaryDevice;
+  int tpid;
 protected:
   int SectionLength(const uchar *Data, int Length) { return (Length >= 3) ? ((int(Data[1]) & 0x0F) << 8)| Data[2] : 0; }
 public:
@@ -240,6 +242,7 @@ public:
   int Vpid(void) { return vpid; }
        ///< Returns the video pid as defined by the current PMT.
   int Vtype(void) { return vtype; }
+  int Tpid(void) { return tpid; }
   };
 
 // TS to PES converter:
