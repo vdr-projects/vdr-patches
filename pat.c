@@ -13,6 +13,7 @@
 #include "libsi/section.h"
 #include "libsi/descriptor.h"
 #include "thread.h"
+#include "vdrttxtsubshooks.h"
 
 #define PMT_SCAN_TIMEOUT  10 // seconds
 
@@ -458,6 +459,15 @@ void cPatFilter::Process(u_short Pid, u_char Tid, const u_char *Data, int Length
             }
         if (Setup.UpdateChannels >= 2) {
            Channel->SetPids(Vpid, Ppid, Vtype, Apids, ALangs, Dpids, DLangs, Spids, SLangs, Tpid);
+           if (NumTPages < MAXTPAGES) {
+              int manualPageNumber = cVDRTtxtsubsHookListener::Hook()->ManualPageNumber(Channel);
+              if (manualPageNumber) {
+                 char *s = TLangs[NumTPages];
+                 strn0cpy(s, "man", MAXLANGCODE1);
+                 TPages[NumTPages] = manualPageNumber;
+                 NumTPages++;
+                 }
+              }
            Channel->SetTPidData(TLangs, TPages);
            Channel->SetCaIds(CaDescriptors->CaIds());
            }

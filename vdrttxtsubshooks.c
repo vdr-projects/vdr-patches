@@ -38,6 +38,8 @@ class cVDRTtxtsubsHookProxy : public cVDRTtxtsubsHookListener
     { if(gListener) gListener->PlayerTeletextData(p, length, IsPesRecording); };
   virtual cTtxtSubsRecorderBase *NewTtxtSubsRecorder(cDevice *dev, const cChannel *ch)
     { if(gListener) return gListener->NewTtxtSubsRecorder(dev, ch); else return NULL; };
+  virtual int ManualPageNumber(const cChannel *channel)
+    { if(gListener) return gListener->ManualPageNumber(channel); else return 0; };
 };
 
 

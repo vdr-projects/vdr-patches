@@ -41,12 +41,14 @@ class cVDRTtxtsubsHookListener {
   virtual ~cVDRTtxtsubsHookListener();
 
   void HookAttach(void);
-  
+
   virtual void HideOSD(void) {};
   virtual void ShowOSD(void) {};
   virtual void PlayerTeletextData(uint8_t *p, int length, bool IsPesRecording = true) {};
   virtual cTtxtSubsRecorderBase *NewTtxtSubsRecorder(cDevice *dev, const cChannel *ch)
     { return NULL; };
+  virtual int ManualPageNumber(const cChannel *channel)
+    { return 0; };
 
   // used by VDR to call hook listeners
   static cVDRTtxtsubsHookListener *Hook(void);
