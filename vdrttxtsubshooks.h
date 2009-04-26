@@ -21,6 +21,8 @@
 #ifndef __VDRTTXTSUBSHOOKS_H
 #define __VDRTTXTSUBSHOOKS_H
 
+#define TTXTSUBSVERSNUM 1
+
 class cDevice;
 class cChannel;
 
