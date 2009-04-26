@@ -1183,6 +1183,13 @@ int cDevice::PlayPesPacket(const uchar *Data, int Length, bool VideoOnly)
                   }
                break;
           case 0xBD: { // private stream 1
+               // EBU Teletext data, ETSI EN 300 472
+               // if PES data header length = 24 and data_identifier = 0x10..0x1F (EBU Data)
+               if (Data[8] == 0x24 && Data[45] >= 0x10 && Data[45] < 0x20) {
+                  cVDRTtxtsubsHookListener::Hook()->PlayerTeletextData((uint8_t*)Data, Length);
+                  break;
+                  }
+
                int PayloadOffset = Data[8] + 9;
 
                // Compatibility mode for old subtitles plugin:
