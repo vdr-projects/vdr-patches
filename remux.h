@@ -342,6 +342,7 @@ private:
   int vpid;
   int ppid;
   int vtype;
+  int tpid;
   int apids[MAXAPIDS + 1]; // list is zero-terminated
   int atypes[MAXAPIDS + 1]; // list is zero-terminated
   char alangs[MAXAPIDS][MAXLANGCODE2];
@@ -392,6 +393,9 @@ public:
   int Vtype(void) const { return vtype; }
        ///< Returns the video stream type as defined by the current PMT, or 0 if no video
        ///< stream type has been detected, yet.
+  int Tpid(void) { return tpid; }
+       ///< Returns the teletext pid as defined by the current PMT, or 0 if no teletext
+       ///< pid has been detected, yet.
   const int *Apids(void) const { return apids; }
   const int *Dpids(void) const { return dpids; }
   const int *Spids(void) const { return spids; }
@@ -406,6 +410,7 @@ public:
   uchar SubtitlingType(int i) const { return (0 <= i && i < MAXSPIDS) ? subtitlingTypes[i] : uchar(0); }
   uint16_t CompositionPageId(int i) const { return (0 <= i && i < MAXSPIDS) ? compositionPageIds[i] : uint16_t(0); }
   uint16_t AncillaryPageId(int i) const { return (0 <= i && i < MAXSPIDS) ? ancillaryPageIds[i] : uint16_t(0); }
+  const tTeletextSubtitlePage* TeletextSubtitlePages() const { return teletextSubtitlePages; }
   };
 
 // TS to PES converter:
