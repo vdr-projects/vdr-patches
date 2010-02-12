@@ -73,6 +73,8 @@ OBJS = audio.o channels.o ci.o config.o cutter.o device.o diseqc.o dvbdevice.o d
        skinclassic.o skinlcars.o skins.o skinsttng.o sourceparams.o sources.o spu.o status.o svdrp.o themes.o thread.o\
        timers.o tools.o transfer.o vdr.o videodir.o
 
+OBJS += vdrttxtsubshooks.o
+
 DEFINES  += $(CDEFINES)
 INCLUDES += $(CINCLUDES)
 
