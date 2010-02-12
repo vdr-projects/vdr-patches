@@ -408,6 +408,26 @@ void cChannel::SetSubtitlingDescriptors(uchar *SubtitlingTypes, uint16_t *Compos
      }
 }
 
+void cChannel::SetTeletextSubtitlePages(tTeletextSubtitlePage pages[], int numberOfPages)
+{
+  int mod = CHANNELMOD_NONE;
+  if (totalTtxtSubtitlePages != numberOfPages)
+     mod |= CHANNELMOD_PIDS;
+  totalTtxtSubtitlePages = 0;
+  for (int i = 0; (i < numberOfPages) && (totalTtxtSubtitlePages < MAXTXTPAGES); i++) {
+      if (teletextSubtitlePages[totalTtxtSubtitlePages].ttxtMagazine != pages[i].ttxtMagazine ||
+          teletextSubtitlePages[totalTtxtSubtitlePages].ttxtPage != pages[i].ttxtPage ||
+          teletextSubtitlePages[totalTtxtSubtitlePages].ttxtType != pages[i].ttxtType ||
+          strcmp(teletextSubtitlePages[totalTtxtSubtitlePages].ttxtLanguage, pages[i].ttxtLanguage)) {
+         mod |= CHANNELMOD_PIDS;
+         teletextSubtitlePages[totalTtxtSubtitlePages] = pages[i];
+         }
+      totalTtxtSubtitlePages++;
+      }
+  modification |= mod;
+  Channels.SetModified();
+}
+
 void cChannel::SetCaIds(const int *CaIds)
 {
   if (caids[0] && caids[0] <= CA_USER_MAX)

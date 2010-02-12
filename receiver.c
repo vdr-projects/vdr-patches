@@ -67,7 +67,8 @@ bool cReceiver::SetPids(const cChannel *Channel)
             (Channel->Ppid() == Channel->Vpid() || AddPid(Channel->Ppid())) &&
             AddPids(Channel->Apids()) &&
             AddPids(Channel->Dpids()) &&
-            AddPids(Channel->Spids());
+            AddPids(Channel->Spids()) &&
+            AddPid(Channel->Tpid());
      }
   return true;
 }
