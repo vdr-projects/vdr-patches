@@ -219,6 +219,29 @@ int cPatPmtGenerator::MakeSubtitlingDescriptor(uchar *Target, const char *Langua
   return i;
 }
 
+int cPatPmtGenerator::MakeTeletextDescriptor(uchar *Target, const tTeletextSubtitlePage *pages, int pageCount)
+{
+  int i = 0, j = 0;
+  Target[i++] = SI::TeletextDescriptorTag;
+  int l = i;
+  Target[i++] = 0x00; // length
+  for (int n = 0; n < pageCount; n++) {
+      const char* Language = pages[n].ttxtLanguage;
+      Target[i++] = *Language++;
+      Target[i++] = *Language++;
+      Target[i++] = *Language++;
+      Target[i++] = (pages[n].ttxtType << 3) + pages[n].ttxtMagazine;
+      Target[i++] = pages[n].ttxtPage;
+      j++;
+      }
+  if (j > 0) {
+     Target[l] = j * 5; // update length
+     IncEsInfoLength(i);
+     return i;
+     }
+  return 0;
+}
+
 int cPatPmtGenerator::MakeLanguageDescriptor(uchar *Target, const char *Language)
 {
   int i = 0;
@@ -306,6 +329,7 @@ void cPatPmtGenerator::GeneratePmt(const cChannel *Channel)
   if (Channel) {
      int Vpid = Channel->Vpid();
      int Ppid = Channel->Ppid();
+     int Tpid = Channel->Tpid();
      uchar *p = buf;
      int i = 0;
      p[i++] = 0x02; // table id
@@ -338,6 +362,10 @@ void cPatPmtGenerator::GeneratePmt(const cChannel *Channel)
          i += MakeStream(buf + i, 0x06, Channel->Spid(n));
          i += MakeSubtitlingDescriptor(buf + i, Channel->Slang(n), Channel->SubtitlingType(n), Channel->CompositionPageId(n), Channel->AncillaryPageId(n));
          }
+     if (Tpid) {
+        i += MakeStream(buf + i, 0x06, Tpid);
+        i += MakeTeletextDescriptor(buf + i, Channel->TeletextSubtitlePages(), Channel->TotalTeletextSubtitlePages());
+        }
 
      int sl = i - SectionLength - 2 + 4; // -2 = SectionLength storage, +4 = length of CRC
      buf[SectionLength] |= (sl >> 8) & 0x0F;
@@ -501,6 +529,7 @@ void cPatPmtParser::ParsePmt(const uchar *Data, int Length)
      spids[0] = 0;
      atypes[0] = 0;
      dtypes[0] = 0;
+     totalTtxtSubtitlePages = 0;
      SI::PMT::Stream stream;
      for (SI::Loop::Iterator it; Pmt.streamLoop.getNext(stream, it); ) {
          dbgpatpmt("     stream type = %02X, pid = %d", stream.getStreamType(), stream.getPid());
