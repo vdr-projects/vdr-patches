@@ -341,6 +341,8 @@ void cPatFilter::Process(u_short Pid, u_char Tid, const u_char *Data, int Length
         char DLangs[MAXDPIDS][MAXLANGCODE2] = { "" };
         char SLangs[MAXSPIDS][MAXLANGCODE2] = { "" };
         int Tpid = 0;
+        tTeletextSubtitlePage TeletextSubtitlePages[MAXTXTPAGES];
+        int NumTPages = 0;
         int NumApids = 0;
         int NumDpids = 0;
         int NumSpids = 0;
@@ -426,8 +428,21 @@ void cPatFilter::Process(u_short Pid, u_char Tid, const u_char *Data, int Length
                                     NumSpids++;
                                     }
                                  break;
-                            case SI::TeletextDescriptorTag:
+                            case SI::TeletextDescriptorTag: {
                                  Tpid = esPid;
+                                 SI::TeletextDescriptor *sd = (SI::TeletextDescriptor *)d;
+                                 SI::TeletextDescriptor::Teletext ttxt;
+                                 for (SI::Loop::Iterator it; sd->teletextLoop.getNext(ttxt, it); ) {
+                                     bool isSubtitlePage = (ttxt.getTeletextType() == 0x02) || (ttxt.getTeletextType() == 0x05);
+                                     if ((NumTPages < MAXTXTPAGES) && ttxt.languageCode[0] && isSubtitlePage) {
+                                        strn0cpy(TeletextSubtitlePages[NumTPages].ttxtLanguage, I18nNormalizeLanguageCode(ttxt.languageCode), MAXLANGCODE1);
+                                        TeletextSubtitlePages[NumTPages].ttxtPage = ttxt.getTeletextPageNumber();
+                                        TeletextSubtitlePages[NumTPages].ttxtMagazine = ttxt.getTeletextMagazineNumber();
+                                        TeletextSubtitlePages[NumTPages].ttxtType = ttxt.getTeletextType();
+                                        NumTPages++;
+                                        }
+                                     }
+                                 }
                                  break;
                             case SI::ISO639LanguageDescriptorTag: {
                                  SI::ISO639LanguageDescriptor *ld = (SI::ISO639LanguageDescriptor *)d;
@@ -481,6 +496,7 @@ void cPatFilter::Process(u_short Pid, u_char Tid, const u_char *Data, int Length
             }
         if (Setup.UpdateChannels >= 2) {
            Channel->SetPids(Vpid, Ppid, Vtype, Apids, ALangs, Dpids, DLangs, Spids, SLangs, Tpid);
+           Channel->SetTeletextSubtitlePages(TeletextSubtitlePages, NumTPages);
            Channel->SetCaIds(CaDescriptors->CaIds());
            Channel->SetSubtitlingDescriptors(SubtitlingTypes, CompositionPageIds, AncillaryPageIds);
            }
