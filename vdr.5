@@ -214,6 +214,13 @@ if there is an audio type.
 .TP
 .B TPID
 The teletext PID.
+
+Fixed teletext subtitling pages can be defined separated by a semicolon.
+The pages (separated by commas) can contain ISO 639 language codes, delimited
+by a '=' sign, as in
+
+.B ...:2001;150=deu,151=fin:...
+
 .TP
 .B Conditional access
 A hexadecimal integer defining how this channel can be accessed:
