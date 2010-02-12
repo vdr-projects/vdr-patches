@@ -411,9 +411,9 @@ void cChannel::SetSubtitlingDescriptors(uchar *SubtitlingTypes, uint16_t *Compos
 void cChannel::SetTeletextSubtitlePages(tTeletextSubtitlePage pages[], int numberOfPages)
 {
   int mod = CHANNELMOD_NONE;
-  if (totalTtxtSubtitlePages != numberOfPages)
+  if (totalTtxtSubtitlePages != (fixedTtxtSubtitlePages + numberOfPages))
      mod |= CHANNELMOD_PIDS;
-  totalTtxtSubtitlePages = 0;
+  totalTtxtSubtitlePages = fixedTtxtSubtitlePages;
   for (int i = 0; (i < numberOfPages) && (totalTtxtSubtitlePages < MAXTXTPAGES); i++) {
       if (teletextSubtitlePages[totalTtxtSubtitlePages].ttxtMagazine != pages[i].ttxtMagazine ||
           teletextSubtitlePages[totalTtxtSubtitlePages].ttxtPage != pages[i].ttxtPage ||
@@ -556,10 +556,17 @@ cString cChannel::ToText(const cChannel *Channel)
         q += IntArrayToString(q, Channel->dpids, 10, Channel->dlangs, Channel->dtypes);
         }
      *q = 0;
-     const int TBufferSize = MAXSPIDS * (5 + 1 + MAXLANGCODE2) + 10; // 5 digits plus delimiting ',' or ';' plus optional '=cod+cod', +10: paranoia and tpid
+     const int TBufferSize = (MAXTXTPAGES * MAXSPIDS) * (5 + 1 + MAXLANGCODE2) + 10; // 5 digits plus delimiting ',' or ';' plus optional '=cod+cod', +10: paranoia and tpid
      char tpidbuf[TBufferSize];
      q = tpidbuf;
      q += snprintf(q, sizeof(tpidbuf), "%d", Channel->tpid);
+     if (Channel->fixedTtxtSubtitlePages > 0) {
+        *q++ = '+';
+        for (int i = 0; i < Channel->fixedTtxtSubtitlePages; ++i) {
+            tTeletextSubtitlePage page = Channel->teletextSubtitlePages[i];
+            q += snprintf(q, sizeof(tpidbuf) - (q - tpidbuf), "%d=%s", page.PageNumber(), page.ttxtLanguage);
+            }
+        }
      if (Channel->spids[0]) {
         *q++ = ';';
         q += IntArrayToString(q, Channel->spids, 10, Channel->slangs);
@@ -729,6 +736,32 @@ bool cChannel::Parse(const char *s)
                     p = NULL;
                     }
               spids[NumSpids] = 0;
+              }
+           fixedTtxtSubtitlePages = 0;
+           if ((p = strchr(tpidbuf, '+')) != NULL) {
+              *p++ = 0;
+              char *q;
+              char *strtok_next;
+              while ((q = strtok_r(p, ",", &strtok_next)) != NULL) {
+                    if (fixedTtxtSubtitlePages < MAXTXTPAGES) {
+                       int page;
+                       char *l = strchr(q, '=');
+                       if (l)
+                          *l++ = 0;
+                       if (sscanf(q, "%d", &page) == 1) {
+                          teletextSubtitlePages[fixedTtxtSubtitlePages] = tTeletextSubtitlePage(page);
+                          if (l)
+                             strn0cpy(teletextSubtitlePages[fixedTtxtSubtitlePages].ttxtLanguage, l, MAXLANGCODE2);
+                          fixedTtxtSubtitlePages++;
+                          }
+                       else
+                          esyslog("ERROR: invalid Teletext page!"); // no need to set ok to 'false'
+                       }
+                    else
+                       esyslog("ERROR: too many Teletext pages!"); // no need to set ok to 'false'
+                    p = NULL;
+                    }
+              totalTtxtSubtitlePages = fixedTtxtSubtitlePages;
               }
            if (sscanf(tpidbuf, "%d", &tpid) != 1)
               return false;
