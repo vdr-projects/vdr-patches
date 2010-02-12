@@ -284,7 +284,8 @@ public:
   uchar SubtitlingType(int i) const { return (0 <= i && i < MAXSPIDS) ? subtitlingTypes[i] : uchar(0); }
   uint16_t CompositionPageId(int i) const { return (0 <= i && i < MAXSPIDS) ? compositionPageIds[i] : uint16_t(0); }
   uint16_t AncillaryPageId(int i) const { return (0 <= i && i < MAXSPIDS) ? ancillaryPageIds[i] : uint16_t(0); }
-  const tTeletextSubtitlePage* TeletextSubtitlePages() const { return teletextSubtitlePages; }
+  const tTeletextSubtitlePage *TeletextSubtitlePages() const { return teletextSubtitlePages; }
+  int TotalTeletextSubtitlePages() const { return totalTtxtSubtitlePages; }
   };
 
 // TS to PES converter:
