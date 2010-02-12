@@ -18,6 +18,7 @@
 #include "receiver.h"
 #include "status.h"
 #include "transfer.h"
+#include "vdrttxtsubshooks.h"
 
 // --- cLiveSubtitle ---------------------------------------------------------
 
@@ -1250,6 +1251,13 @@ int cDevice::PlayPesPacket(const uchar *Data, int Length, bool VideoOnly)
                   }
                break;
           case 0xBD: { // private stream 1
+               // EBU Teletext data, ETSI EN 300 472
+               // if PES data header length = 24 and data_identifier = 0x10..0x1F (EBU Data)
+               if (Data[8] == 0x24 && Data[45] >= 0x10 && Data[45] < 0x20) {
+                  cVDRTtxtsubsHookListener::Hook()->PlayerTeletextData((uint8_t*)Data, Length);
+                  break;
+                  }
+
                int PayloadOffset = Data[8] + 9;
 
                // Compatibility mode for old subtitles plugin:
@@ -1409,6 +1417,7 @@ int cDevice::PlayTs(const uchar *Data, int Length, bool VideoOnly)
      tsToPesVideo.Reset();
      tsToPesAudio.Reset();
      tsToPesSubtitle.Reset();
+     tsToPesTeletext.Reset();
      }
   else if (Length < TS_SIZE) {
      esyslog("ERROR: skipped %d bytes of TS fragment", Length);
@@ -1453,6 +1462,17 @@ int cDevice::PlayTs(const uchar *Data, int Length, bool VideoOnly)
                  else if (Pid == availableTracks[currentSubtitleTrack].id) {
                     if (!VideoOnly || HasIBPTrickSpeed())
                        PlayTsSubtitle(Data, TS_SIZE);
+                    }
+                 else if (Pid == patPmtParser.Tpid()) {
+                    if (!VideoOnly || HasIBPTrickSpeed()) {
+                       int l;
+                       tsToPesTeletext.PutTs(Data, Length);
+                       if (const uchar *p = tsToPesTeletext.GetPes(l)) {
+                          if ((l > 45) && (p[0] == 0x00) && (p[1] == 0x00) && (p[2] == 0x01) && (p[3] == 0xbd) && (p[8] == 0x24) && (p[45] >= 0x10) && (p[45] < 0x20))
+                             cVDRTtxtsubsHookListener::Hook()->PlayerTeletextData((uchar *)p, l, false, patPmtParser.TeletextSubtitlePages(), patPmtParser.TotalTeletextSubtitlePages());
+                          tsToPesTeletext.Reset();
+                          }
+                       }
                     }
                  }
               }

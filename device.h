@@ -538,6 +538,7 @@ private:
   cTsToPes tsToPesVideo;
   cTsToPes tsToPesAudio;
   cTsToPes tsToPesSubtitle;
+  cTsToPes tsToPesTeletext;
   bool isPlayingVideo;
 protected:
   const cPatPmtParser *PatPmtParser(void) const { return &patPmtParser; }
