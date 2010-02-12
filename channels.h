@@ -144,6 +144,7 @@ private:
   uint16_t compositionPageIds[MAXSPIDS];
   uint16_t ancillaryPageIds[MAXSPIDS];
   int tpid;
+  int fixedTtxtSubtitlePages;
   int totalTtxtSubtitlePages;
   tTeletextSubtitlePage teletextSubtitlePages[MAXTXTPAGES];
   int caids[MAXCAIDS + 1]; // list is zero-terminated
