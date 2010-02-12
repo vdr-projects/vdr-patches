@@ -435,6 +435,7 @@ void cPatPmtParser::Reset(void)
   pmtPid = -1;
   vpid = vtype = 0;
   ppid = 0;
+  tpid = 0;
 }
 
 void cPatPmtParser::ParsePat(const uchar *Data, int Length)
@@ -520,6 +521,7 @@ void cPatPmtParser::ParsePmt(const uchar *Data, int Length)
      int NumSpids = 0;
      vpid = vtype = 0;
      ppid = 0;
+     tpid = 0;
      apids[0] = 0;
      dpids[0] = 0;
      spids[0] = 0;
@@ -623,6 +625,28 @@ void cPatPmtParser::ParsePmt(const uchar *Data, int Length)
                                     NumSpids++;
                                     spids[NumSpids]= 0;
                                     }
+                                 break;
+                            case SI::TeletextDescriptorTag: {
+                                 dbgpatpmt(" teletext");
+                                 tpid = stream.getPid();
+                                 SI::TeletextDescriptor *sd = (SI::TeletextDescriptor *)d;
+                                 SI::TeletextDescriptor::Teletext ttxt;
+                                 if (totalTtxtSubtitlePages < MAXTXTPAGES) {
+                                    for (SI::Loop::Iterator it; sd->teletextLoop.getNext(ttxt, it); ) {
+                                        bool isSubtitlePage = (ttxt.getTeletextType() == 0x02) || (ttxt.getTeletextType() == 0x05);
+                                        if (isSubtitlePage && ttxt.languageCode[0]) {
+                                           dbgpatpmt(" '%s:%x.%x'", ttxt.languageCode, ttxt.getTeletextMagazineNumber(), ttxt.getTeletextPageNumber());
+                                           strn0cpy(teletextSubtitlePages[totalTtxtSubtitlePages].ttxtLanguage, I18nNormalizeLanguageCode(ttxt.languageCode), MAXLANGCODE1);
+                                           teletextSubtitlePages[totalTtxtSubtitlePages].ttxtPage = ttxt.getTeletextPageNumber();
+                                           teletextSubtitlePages[totalTtxtSubtitlePages].ttxtMagazine = ttxt.getTeletextMagazineNumber();
+                                           teletextSubtitlePages[totalTtxtSubtitlePages].ttxtType = ttxt.getTeletextType();
+                                           totalTtxtSubtitlePages++;
+                                           if (totalTtxtSubtitlePages >= MAXTXTPAGES)
+                                              break;
+                                           }
+                                        }
+                                    }
+                                 }
                                  break;
                             case SI::ISO639LanguageDescriptorTag: {
                                  SI::ISO639LanguageDescriptor *ld = (SI::ISO639LanguageDescriptor *)d;
