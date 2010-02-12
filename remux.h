@@ -174,6 +174,7 @@ protected:
   int MakeStream(uchar *Target, uchar Type, int Pid);
   int MakeAC3Descriptor(uchar *Target, uchar Type);
   int MakeSubtitlingDescriptor(uchar *Target, const char *Language, uchar SubtitlingType, uint16_t CompositionPageId, uint16_t AncillaryPageId);
+  int MakeTeletextDescriptor(uchar *Target, const tTeletextSubtitlePage *pages, int pageCount);
   int MakeLanguageDescriptor(uchar *Target, const char *Language);
   int MakeCRC(uchar *Target, const uchar *Data, int Length);
   void GeneratePmtPid(const cChannel *Channel);
@@ -231,6 +232,8 @@ private:
   uint16_t compositionPageIds[MAXSPIDS];
   uint16_t ancillaryPageIds[MAXSPIDS];
   bool updatePrimaryDevice;
+  int totalTtxtSubtitlePages;
+  tTeletextSubtitlePage teletextSubtitlePages[MAXTXTPAGES];
 protected:
   int SectionLength(const uchar *Data, int Length) { return (Length >= 3) ? ((int(Data[1]) & 0x0F) << 8)| Data[2] : 0; }
 public:
