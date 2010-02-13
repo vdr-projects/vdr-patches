@@ -941,6 +941,9 @@ msgstr "Subtiitri läbipaistvus"
 msgid "Setup.DVB$Subtitle background transparency"
 msgstr "Subtiitri tausta läbipaistvus"
 
+msgid "Setup.DVB$Enable teletext support"
+msgstr "Teleteksti tugi"
+
 msgid "LNB"
 msgstr "LNB"
 
