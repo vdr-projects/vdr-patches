@@ -943,6 +943,9 @@ msgstr "字幕前景透明度"
 msgid "Setup.DVB$Subtitle background transparency"
 msgstr "字幕背景透明度"
 
+msgid "Setup.DVB$Enable teletext support"
+msgstr ""
+
 msgid "LNB"
 msgstr "切换器设置"
 

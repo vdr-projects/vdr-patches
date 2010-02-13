@@ -83,7 +83,7 @@ bool cReceiver::SetPids(const cChannel *Channel)
             AddPids(Channel->Apids()) &&
             AddPids(Channel->Dpids()) &&
             AddPids(Channel->Spids()) &&
-            AddPid(Channel->Tpid());
+            (!Setup.SupportTeletext || AddPid(Channel->Tpid()));
      }
 return true;
 }

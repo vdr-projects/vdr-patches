@@ -940,6 +940,9 @@ msgstr "Subtitrų priekinio vaizdo permatomumas"
 msgid "Setup.DVB$Subtitle background transparency"
 msgstr "Subtitrų fono permatomumas"
 
+msgid "Setup.DVB$Enable teletext support"
+msgstr ""
+
 msgid "LNB"
 msgstr "Konverteris (LNB)"
 

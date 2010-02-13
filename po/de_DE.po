@@ -940,6 +940,9 @@ msgstr "Untertitel-Transparenz Vordergrund"
 msgid "Setup.DVB$Subtitle background transparency"
 msgstr "Untertitel-Transparenz Hintergrund"
 
+msgid "Setup.DVB$Enable teletext support"
+msgstr "Videotext-Unterstützung aktivieren"
+
 msgid "LNB"
 msgstr "LNB"
 

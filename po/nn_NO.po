@@ -941,6 +941,9 @@ msgstr ""
 msgid "Setup.DVB$Subtitle background transparency"
 msgstr ""
 
+msgid "Setup.DVB$Enable teletext support"
+msgstr ""
+
 msgid "LNB"
 msgstr "LNB"
 
