@@ -971,6 +971,9 @@ msgstr "Transparència primer pla subtítols"
 msgid "Setup.DVB$Subtitle background transparency"
 msgstr "Transparència fons subtítols"
 
+msgid "Setup.DVB$Enable teletext support"
+msgstr ""
+
 msgid "LNB"
 msgstr "Configuració de l'LNB"
 

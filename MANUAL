@@ -756,6 +756,9 @@ Version 1.6
                          background transparency. By default the values as broadcast
                          are used.
 
+  Enable teletext support = yes
+                         If set to 'yes', enables teletext subtitles.
+
   LNB:
 
   Use DiSEqC = no        Generally turns DiSEqC support on or off.

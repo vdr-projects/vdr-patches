@@ -273,6 +273,7 @@ public:
   int MarginStart, MarginStop;
   int AudioLanguages[I18N_MAX_LANGUAGES + 1];
   int DisplaySubtitles;
+  int SupportTeletext;
   int SubtitleLanguages[I18N_MAX_LANGUAGES + 1];
   int SubtitleOffset;
   int SubtitleFgTransparency, SubtitleBgTransparency;

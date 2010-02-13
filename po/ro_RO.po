@@ -970,6 +970,9 @@ msgstr "Transparenţa prim-planului subtitrării"
 msgid "Setup.DVB$Subtitle background transparency"
 msgstr "Transparenţa fundalului subtitrării"
 
+msgid "Setup.DVB$Enable teletext support"
+msgstr ""
+
 msgid "LNB"
 msgstr "LNB"
 
