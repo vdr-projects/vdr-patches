@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR 1.6.0\n"
 "Report-Msgid-Bugs-To: <vdr-bugs@tvdr.de>\n"
-"POT-Creation-Date: 2010-01-17 16:18+0100\n"
+"POT-Creation-Date: 2010-02-14 17:47+0100\n"
 "PO-Revision-Date: 2008-02-26 17:20+0100\n"
 "Last-Translator: Johan Schuring <johan.schuring@vetteblei.nl>\n"
 "Language-Team: Dutch\n"
@@ -934,6 +934,9 @@ msgstr "Transparantie voorgrond ondertiteling"
 
 msgid "Setup.DVB$Subtitle background transparency"
 msgstr "Transparantie achtergrond ondertiteling"
+
+msgid "Setup.DVB$Enable teletext support"
+msgstr ""
 
 msgid "LNB"
 msgstr "LNB"

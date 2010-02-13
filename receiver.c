@@ -82,7 +82,8 @@ bool cReceiver::SetPids(const cChannel *Channel)
             (Channel->Ppid() == Channel->Vpid() || AddPid(Channel->Ppid())) &&
             AddPids(Channel->Apids()) &&
             (!Setup.UseDolbyDigital || AddPids(Channel->Dpids())) &&
-            AddPids(Channel->Spids()) && AddPid(Channel->Tpid());
+            AddPids(Channel->Spids()) &&
+            (!Setup.SupportTeletext || AddPid(Channel->Tpid()));
      }
 return true;
 }

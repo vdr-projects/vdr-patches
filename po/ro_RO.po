@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR 1.6.0\n"
 "Report-Msgid-Bugs-To: <vdr-bugs@tvdr.de>\n"
-"POT-Creation-Date: 2010-01-17 16:18+0100\n"
+"POT-Creation-Date: 2010-02-14 17:47+0100\n"
 "PO-Revision-Date: 2008-02-25 00:39+0100\n"
 "Last-Translator: Lucian Muresan <lucianm@users.sourceforge.net>\n"
 "Language-Team: Romanian\n"
@@ -933,6 +933,9 @@ msgstr "Transparenþa prim-planului subtitrãrii"
 
 msgid "Setup.DVB$Subtitle background transparency"
 msgstr "Transparenþa fundalului subtitrãrii"
+
+msgid "Setup.DVB$Enable teletext support"
+msgstr ""
 
 msgid "LNB"
 msgstr "LNB"

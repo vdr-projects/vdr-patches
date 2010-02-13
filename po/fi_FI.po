@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR 1.6.0\n"
 "Report-Msgid-Bugs-To: <vdr-bugs@tvdr.de>\n"
-"POT-Creation-Date: 2010-01-17 16:18+0100\n"
+"POT-Creation-Date: 2010-02-14 17:47+0100\n"
 "PO-Revision-Date: 2007-08-15 15:52+0200\n"
 "Last-Translator: Rolf Ahrenberg <rahrenbe@cc.hut.fi>\n"
 "Language-Team: Finnish\n"
@@ -933,6 +933,9 @@ msgstr "Tekstityksen läpinäkyvyys"
 
 msgid "Setup.DVB$Subtitle background transparency"
 msgstr "Tekstityksen taustan läpinäkyvyys"
+
+msgid "Setup.DVB$Enable teletext support"
+msgstr "Salli teksti-TV-tuki"
 
 msgid "LNB"
 msgstr "LNB"
