@@ -333,6 +333,7 @@ cSetup::cSetup(void)
   MarginStop = 10;
   AudioLanguages[0] = -1;
   DisplaySubtitles = 0;
+  SupportTeletext = 0;
   SubtitleLanguages[0] = -1;
   SubtitleOffset = 0;
   SubtitleFgTransparency = 0;
@@ -521,6 +522,7 @@ bool cSetup::Parse(const char *Name, const char *Value)
   else if (!strcasecmp(Name, "MarginStop"))          MarginStop         = atoi(Value);
   else if (!strcasecmp(Name, "AudioLanguages"))      return ParseLanguages(Value, AudioLanguages);
   else if (!strcasecmp(Name, "DisplaySubtitles"))    DisplaySubtitles   = atoi(Value);
+  else if (!strcasecmp(Name, "SupportTeletext"))     SupportTeletext    = atoi(Value);
   else if (!strcasecmp(Name, "SubtitleLanguages"))   return ParseLanguages(Value, SubtitleLanguages);
   else if (!strcasecmp(Name, "SubtitleOffset"))      SubtitleOffset     = atoi(Value);
   else if (!strcasecmp(Name, "SubtitleFgTransparency")) SubtitleFgTransparency = atoi(Value);
@@ -614,6 +616,7 @@ bool cSetup::Save(void)
   Store("MarginStop",         MarginStop);
   StoreLanguages("AudioLanguages", AudioLanguages);
   Store("DisplaySubtitles",   DisplaySubtitles);
+  Store("SupportTeletext",    SupportTeletext);
   StoreLanguages("SubtitleLanguages", SubtitleLanguages);
   Store("SubtitleOffset",     SubtitleOffset);
   Store("SubtitleFgTransparency", SubtitleFgTransparency);

@@ -932,6 +932,9 @@ msgstr "Prze¼rocze podtytu³ów: Przód"
 msgid "Setup.DVB$Subtitle background transparency"
 msgstr "Prze¼rocze podtytu³ów: T³o"
 
+msgid "Setup.DVB$Enable teletext support"
+msgstr ""
+
 msgid "LNB"
 msgstr "LNB"
 

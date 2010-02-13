@@ -932,6 +932,9 @@ msgstr "Prùhlednost písma titulkù"
 msgid "Setup.DVB$Subtitle background transparency"
 msgstr "Prùhlednost pozadí titulkù"
 
+msgid "Setup.DVB$Enable teletext support"
+msgstr ""
+
 msgid "LNB"
 msgstr "LNB"
 
