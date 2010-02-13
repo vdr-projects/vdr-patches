@@ -937,6 +937,9 @@ msgstr "Felirat transzparenciája"
 msgid "Setup.DVB$Subtitle background transparency"
 msgstr "Felirat hátterének transzparenciája"
 
+msgid "Setup.DVB$Enable teletext support"
+msgstr ""
+
 msgid "LNB"
 msgstr "LNB"
 

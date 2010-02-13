@@ -935,6 +935,9 @@ msgstr "Transparentnost podnapisov"
 msgid "Setup.DVB$Subtitle background transparency"
 msgstr "Transparentnost ozadja podnapisov"
 
+msgid "Setup.DVB$Enable teletext support"
+msgstr ""
+
 msgid "LNB"
 msgstr "LNB"
 

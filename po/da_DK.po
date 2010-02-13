@@ -934,6 +934,9 @@ msgstr "Undertekst forgrundsgennemsigtighed"
 msgid "Setup.DVB$Subtitle background transparency"
 msgstr "Undertekst baggrundsgennemsigtighed"
 
+msgid "Setup.DVB$Enable teletext support"
+msgstr ""
+
 msgid "LNB"
 msgstr "LNB"
 

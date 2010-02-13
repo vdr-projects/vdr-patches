@@ -937,6 +937,9 @@ msgstr "Tekstityksen läpinäkyvyys"
 msgid "Setup.DVB$Subtitle background transparency"
 msgstr "Tekstityksen taustan läpinäkyvyys"
 
+msgid "Setup.DVB$Enable teletext support"
+msgstr "Salli teksti-TV-tuki"
+
 msgid "LNB"
 msgstr "LNB"
 

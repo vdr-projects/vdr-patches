@@ -934,6 +934,9 @@ msgstr "Прозорість переднього плану субтитрів"
 msgid "Setup.DVB$Subtitle background transparency"
 msgstr "Прозорість заднього плану субтитрів"
 
+msgid "Setup.DVB$Enable teletext support"
+msgstr ""
+
 msgid "LNB"
 msgstr "Конвертер"
 
