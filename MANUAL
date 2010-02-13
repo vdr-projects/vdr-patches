@@ -730,6 +730,9 @@ Version 1.6
                          background transparency. By default the values as broadcast
                          are used.
 
+  Record Teletext Subtitles = no
+                         If set to 'yes', teletext subtitles will be recorded.
+
   LNB:
 
   SLOF               = 11700  The switching frequency (in MHz) between low and

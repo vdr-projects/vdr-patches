@@ -948,6 +948,9 @@ msgstr "Transparência de topo das legendas"
 msgid "Setup.DVB$Subtitle background transparency"
 msgstr "Transparência de fundo das legendas"
 
+msgid "Setup.DVB$Enable teletext support"
+msgstr ""
+
 msgid "LNB"
 msgstr "LNB"
 

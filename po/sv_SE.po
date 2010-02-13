@@ -950,6 +950,9 @@ msgstr "Transparent förgrund textremsa"
 msgid "Setup.DVB$Subtitle background transparency"
 msgstr "Transparent bakgrund textremsa"
 
+msgid "Setup.DVB$Enable teletext support"
+msgstr ""
+
 msgid "LNB"
 msgstr "LNB"
 
