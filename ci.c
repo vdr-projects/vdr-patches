@@ -1913,6 +1913,8 @@ void cCamSlot::AddChannel(const cChannel *Channel)
          AddPid(Channel->Sid(), *Dpid, STREAM_TYPE_PRIVATE);
      for (const int *Spid = Channel->Spids(); *Spid; Spid++)
          AddPid(Channel->Sid(), *Spid, STREAM_TYPE_PRIVATE);
+     if (Channel->Tpid() && Setup.SupportTeletext)
+        AddPid(Channel->Sid(), Channel->Tpid(), STREAM_TYPE_PRIVATE);
      }
 }
 
@@ -1936,6 +1938,9 @@ bool cCamSlot::CanDecrypt(const cChannel *Channel)
          CaPmt.AddPid(*Dpid, STREAM_TYPE_PRIVATE);
      for (const int *Spid = Channel->Spids(); *Spid; Spid++)
          CaPmt.AddPid(*Spid, STREAM_TYPE_PRIVATE); 
+     if (Channel->Tpid() && Setup.SupportTeletext) {
+        CaPmt.AddPid(Channel->Tpid(), STREAM_TYPE_PRIVATE);
+        }
      cas->SendPMT(&CaPmt);
      cTimeMs Timeout(QUERY_REPLY_TIMEOUT);
      do {
