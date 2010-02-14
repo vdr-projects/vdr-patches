@@ -1911,6 +1911,8 @@ void cCamSlot::AddChannel(const cChannel *Channel)
          AddPid(Channel->Sid(), *Apid, STREAM_TYPE_AUDIO);
      for (const int *Dpid = Channel->Dpids(); *Dpid; Dpid++)
          AddPid(Channel->Sid(), *Dpid, STREAM_TYPE_DOLBY);
+     if (Channel->Tpid() && Setup.SupportTeletext)
+        AddPid(Channel->Sid(), Channel->Tpid(), STREAM_TYPE_DOLBY);
      }
 }
 
@@ -1932,6 +1934,9 @@ bool cCamSlot::CanDecrypt(const cChannel *Channel)
          CaPmt.AddPid(*Apid, STREAM_TYPE_AUDIO);
      for (const int *Dpid = Channel->Dpids(); *Dpid; Dpid++)
          CaPmt.AddPid(*Dpid, STREAM_TYPE_DOLBY);
+     if (Channel->Tpid() && Setup.SupportTeletext) {
+        CaPmt.AddPid(Channel->Tpid(), STREAM_TYPE_DOLBY); // FIXME: STREAM_TYPE_DOLBY should probably be renamed STREAM_TYPE_PRIVATE
+        }
      cas->SendPMT(&CaPmt);
      cTimeMs Timeout(QUERY_REPLY_TIMEOUT);
      do {
